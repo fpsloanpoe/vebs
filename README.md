@@ -1,8 +1,6 @@
 <h1>
-vagrant (or ubuntu)<br>
-environment<br>
-bash<br>
-scripts
+This is a port of vebs to use Centos. 
+(Original Vebs https://github.com/drm2/vebs)
 </h1>
 
 Reusable Bash provisioning scripts for Vagrant (or Ubuntu 14.04) environments.
