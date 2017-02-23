@@ -21,10 +21,7 @@ args_group=${4}
 export DEBIAN_FRONTEND=noninteractive
 
 # add ppa for nginx
-sudo add-apt-repository -y ppa:nginx/stable > /dev/null
-
-# update repository information
-sudo apt-get update -qq > /dev/null
+#sudo add-apt-repository -y ppa:nginx/stable > /dev/null
 
 # install nginx
 sudo apt-get install -qq nginx > /dev/null

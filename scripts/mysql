@@ -18,8 +18,10 @@ args_db_host=${4}
 export DEBIAN_FRONTEND=noninteractive
 
 # install MySQL
-sudo -E apt-get install -qq mysql-server > /dev/null
-
+sudo -E yum install -y mysql-server > /dev/null
+#start mysql service
+sudo -E chkconfig mysqld on > /dev/null
+sudo -E service mysqld restart > /dev/null
 # create database
 mysql -uroot -e "create database ${args_db_name};" > /dev/null
 
