@@ -19,7 +19,7 @@ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | b
 
 # make sure nvm binary is accessible during this session
 source ~/.nvm/nvm.sh
-
+echo "source ~/.nvm/nvm.sh" >> ~/.bash_profile
 # install specified version of node
 nvm install ${args_node_version}
 
