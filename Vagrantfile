@@ -68,7 +68,7 @@ Vagrant.configure(2) do |config|
         # @param: (optional) locale to set for LC_ALL global
         args_base_locale = "en_US.UTF-8"
         args_base_locale_lang = "en_US"
-				args_base_locale_chars = "UTF-8
+				args_base_locale_chars = "UTF-8"
 
         # call base provisioner
         config.vm.provision :shell, privileged: false, path: "#{scripts_url}/base", args: [ args_base_packages, args_base_locale ]
@@ -116,10 +116,10 @@ Vagrant.configure(2) do |config|
         ####
 				##WARNING Not ported to Centos yet.
         # @param: version of php to install (must be 5.5, 5.6, or 7.0)
-        args_php_version = "5.6"
+        args_php_version = "56"
 
         # @param: (optional) list of php extensions to install, note: due to the new PPA, you will need to specify the version of php in the extension names as well
-        args_php_extensions = "php5.6-cli php5.6-mcrypt php5.6-fpm php5.6-mysql php5.6-mbstring php5.6-xml"
+        args_php_extensions = "php56-mysqlnd php56-mbstring php56-mcrypt"
 
         # @param: (optional) user to run php-fpm as, note: if left blank, user will be left as default
         args_php_user = "vagrant"
@@ -131,7 +131,7 @@ Vagrant.configure(2) do |config|
         args_php_owner = "vagrant"
 
         # call php provisioner
-        # config.vm.provision :shell, privileged: false, path: "#{scripts_url}/php", args: [ args_php_version, args_php_extensions, args_php_user, args_php_group, args_php_owner ]
+        #config.vm.provision :shell, privileged: false, path: "#{scripts_url}/php", args: [ args_php_version, args_php_extensions, args_php_user, args_php_group, args_php_owner ]
 
         ####
         ## composer
