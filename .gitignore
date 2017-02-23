@@ -2,3 +2,6 @@
 /.vagrant
 
 # Files to Ignore
+ssh/*.pem
+*.swp
+*.swo
