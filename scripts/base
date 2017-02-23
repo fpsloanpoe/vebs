@@ -14,7 +14,7 @@ export DEBIAN_FRONTEND=noninteractive
 # check for locale
 if [ ! -z "${args_base_locale}" ]; then
     # generate the specified locale
-    localedev -v -c -i ${args_base_locale_lang} -f ${args_base_locale_chars} ${args_base_locale}
+    #localedev -v -c -i ${args_base_locale_lang} -f ${args_base_locale_chars} ${args_base_locale}
 
     # set the locale automatically upon login
     echo "export LC_ALL=${args_base_locale}" | tee --append ~/.profile
@@ -22,13 +22,18 @@ if [ ! -z "${args_base_locale}" ]; then
     # set the locale for our current session
     source ~/.profile
 fi
+#Add github key and config
+sudo -E cat /vagrant/ssh/github_ssh.txt >> /home/vagrant/.ssh/config
+sudo -E chown vagrant /home/vagrant/.ssh/config
+sudo -E chmod 600 /home/vagrant/.ssh/config
+sudo -E chmod 600 /vagrant/ssh/fpserver_rsa.pem
 #Add the EPEL repo
-sudo rpm -i http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+sudo -E yum install -y http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 
 # update system package archives
-sudo -E yum update -y > /dev/null
+sudo -E yum update -y 
 
 # if a list of packages is passed in, install those packages
 if [ ! -z "${args_base_packages}" ]; then
-    sudo -E yum install -y ${args_base_packages} > /dev/null
+    sudo -E yum install -y ${args_base_packages} 
 fi
