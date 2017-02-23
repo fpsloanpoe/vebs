@@ -10,9 +10,9 @@
 
 # if you want to maintain your own version of this project, feel free to
 # fork it and change the following to reflect your own copy
-gh_user   = "drm2"
+gh_user   = "fpsloanpoe"
 gh_repo   = "vebs"
-gh_branch = "v0.12.0" # the latest tag is specified to ensure consistency (you may also use "master", but future changes may cause errors in your environment)
+gh_branch = "develop" # the latest tag is specified to ensure consistency (you may also use "master", but future changes may cause errors in your environment)
 gh_url    = "https://raw.githubusercontent.com/#{gh_user}/#{gh_repo}/#{gh_branch}"
 
 # path to provisioning scripts
@@ -37,12 +37,16 @@ Vagrant.configure(2) do |config|
     config.vm.define "vebs" do |vebs|
 
         # set the base box
-        vebs.vm.box = "ubuntu/trusty64"
+        vebs.vm.box = "centos/6"
 
         # set up network configuration
         vebs.vm.network :forwarded_port, guest: 80,  host: 10080
         vebs.vm.network :forwarded_port, guest: 443, host: 10443
+        vebs.vm.network :forwarded_port, guest: 4434, host: 4434
+				vebs.vm.network :forwarded_port, guest: 4433, host: 4435
 
+				
+  			config.vm.synced_folder "apps/", "/var/app/current/"
 
         ####
         ## VirtualBox
@@ -51,34 +55,6 @@ Vagrant.configure(2) do |config|
         vebs.vm.provider "virtualbox" do |provider, override|
             provider.memory = max_memory
             provider.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/vagrant", "1"]
-        end
-
-        ####
-        ## Digital Ocean
-        ####
-
-        vebs.vm.provider "digital_ocean" do |provider, override|
-            # optionally use rsync to mount shared folder
-            # override.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: [ ".vagrant", ".git" ]
-
-            # you probably don't need to change these
-            override.vm.box = "digital_ocean"
-            override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
-
-            # configure the DO droplet here
-            override.ssh.private_key_path = ENV["DIGITAL_OCEAN_PRIVATE_SSH_KEY"] || "~/.ssh/id_rsa"
-            provider.token = ENV["DIGITAL_OCEAN_ACCESS_TOKEN"] || "use ENV or set access token here"
-            provider.image = "ubuntu-14-04-x64"
-            provider.region = "nyc3"
-            provider.size = "512mb"
-
-            # optional droplet configuration
-            # override.ssh.username = "set ssh user here"
-            # provider.ssh_key_name = "Vagrant"
-            # provider.setup = true
-            # provider.ipv6 = true
-            # provider.private_networking = false
-            # provider.backups_enabled = false
         end
 
 
@@ -91,6 +67,8 @@ Vagrant.configure(2) do |config|
 
         # @param: (optional) locale to set for LC_ALL global
         args_base_locale = "en_US.UTF-8"
+        args_base_locale_lang = "en_US"
+				args_base_locale_chars = "UTF-8
 
         # call base provisioner
         config.vm.provision :shell, privileged: false, path: "#{scripts_url}/base", args: [ args_base_packages, args_base_locale ]
@@ -112,12 +90,12 @@ Vagrant.configure(2) do |config|
         args_mysql_db_host = "localhost"
 
         # call mysql provisioner
-        # config.vm.provision :shell, privileged: false, path: "#{scripts_url}/mysql", args: [ args_mysql_db_name, args_mysql_db_user, args_mysql_db_password, args_mysql_db_host ]
+        config.vm.provision :shell, privileged: false, path: "#{scripts_url}/mysql", args: [ args_mysql_db_name, args_mysql_db_user, args_mysql_db_password, args_mysql_db_host ]
 
         ####
         ## postgresql
         ####
-
+				##WARNING Not ported to Centos yet.
         # @param: database name
         args_postgresql_db_name = "dev"
 
@@ -131,12 +109,12 @@ Vagrant.configure(2) do |config|
         args_postgresql_db_host = "localhost"
 
         # call postgresql provisioner
-        # config.vm.provision :shell, privileged: false, path: "#{scripts_url}/postgresql", args: [ args_postgresql_db_name, args_postgresql_db_user, args_postgresql_db_password, args_postgresql_db_host ]
+        #config.vm.provision :shell, privileged: false, path: "#{scripts_url}/postgresql", args: [ args_postgresql_db_name, args_postgresql_db_user, args_postgresql_db_password, args_postgresql_db_host ]
 
         ####
         ## php
         ####
-
+				##WARNING Not ported to Centos yet.
         # @param: version of php to install (must be 5.5, 5.6, or 7.0)
         args_php_version = "5.6"
 
@@ -192,13 +170,13 @@ Vagrant.configure(2) do |config|
         ####
 
         # @param: version of node to install (e.g. 4.2.1). defaults to 'node' for the latest stable version
-        args_node_version = "node"
+				args_node_version = "4.7.3"
 
         # @param: global node packages to install
-        args_node_packages = "npm pm2 gulp"
+        args_node_packages = "pm2 bunyan"
 
         # call node provisioner
-        # config.vm.provision :shell, privileged: false, path: "#{scripts_url}/node", args: [ args_node_version, args_node_packages ]
+        config.vm.provision :shell, privileged: false, path: "#{scripts_url}/node", args: [ args_node_version, args_node_packages ]
 
         ####
         ## npm
@@ -213,6 +191,7 @@ Vagrant.configure(2) do |config|
         ####
         ## ruby
         ####
+				##WARNING Not ported to Centos yet.
 
         # @param: version of ruby to install (e.g. 2.3.0). defaults to 'ruby' for the latest stable version
         args_ruby_version = "ruby"
@@ -226,6 +205,7 @@ Vagrant.configure(2) do |config|
         ####
         ## go
         ####
+				##WARNING Not ported to Centos yet.
 
         # @param: version of go to install (e.g. 1.6).
         args_go_version = "1.6"
@@ -239,6 +219,7 @@ Vagrant.configure(2) do |config|
         ####
         ## rust
         ####
+				##WARNING Not ported to Centos yet.
 
         # @param: version of rust to install (e.g. 1.11.0).
         args_rust_version = "1.11.0"
