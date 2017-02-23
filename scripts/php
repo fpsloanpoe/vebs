@@ -21,41 +21,22 @@ args_php_owner=${5}
 export DEBIAN_FRONTEND=noninteractive
 
 # install necessary locale
-locale-gen en_US.UTF-8
 
 # set locale
 export LC_ALL=en_US.UTF-8
 
 # determine the best installation method based on the desired version of php
-case ${args_php_version} in
-    "7.0"|"5.6"|"5.5")
         # add ppa for 5.6 since it will be a lot faster than using phpbrew
-        sudo -E add-apt-repository -y ppa:ondrej/php > /dev/null
+        sudo -E yum install -y https://mirror.webtatic.com/yum/el6/latest.rpm
 
-        # update repository information
-        sudo apt-get update -qq > /dev/null
-
-        # check whether or not apache is already installed before the ppa installs it (useful for determining whether it should stay or be removed)
-        apache_is_installed=$(command -v apache2) > /dev/null
-
+				sudo -E yum install -y httpd24
         # install specified version of php
-        sudo apt-get install -qq "php${args_php_version}" > /dev/null
+        sudo -E yum install -y "php56" 
 
-        # add new apache packages
-        sudo apt-get install -qq "libapache2-mod-php${args_php_version}" > /dev/null
-
-        # only remove apache if it wasn't already installed
-        if [ -z "${apache_is_installed}" ]; then
-            # remove apache since the ppa automatically installs it (this script should be unopinionated)
-            sudo apt-get remove -qq apache2 > /dev/null
-
-            # (auto)remove apache sub-packages
-            sudo apt-get autoremove -qq > /dev/null
-        fi
 
         # if a string list of packages is passed in, install those packages
         if [ ! -z "${args_php_extensions}" ]; then
-            sudo apt-get install -qq ${args_php_extensions} > /dev/null
+            sudo -E yum install -y  ${args_php_extensions} > /dev/null
         fi
 
         # check for php-fpm
@@ -85,7 +66,5 @@ case ${args_php_version} in
             `${cron_command}`
 
             # service needs to be restarted after changing configuration
-            sudo service php${args_php_version}-fpm restart
+            sudo service httpd restart
         fi
-        ;;
-esac
